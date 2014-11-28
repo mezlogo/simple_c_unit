@@ -14,13 +14,16 @@
 #define TEST_FAIL -1
 #define TEST_NOT_FAIL 0
 
-#define assertTrue(message, test) isTestPass = TEST_NOT_FAIL; if (!(test)) {isTestPass = TEST_FAIL; errorMsg = message; return;} 
+#define assertTrue(message, test) isTestPass = TEST_NOT_FAIL; if (!(test)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; return;} 
 
 char* successMsg = "PASS";
 char* failMsg = "FAIL";
 
+const char* failFuncName;
+char* fileName;
 char* errorMsg = "No errors";
 char errorCount = 0;
+char lineNumber;
 char isTestPass = TEST_NOT_FAIL;
 
 typedef struct TestCase{
@@ -38,7 +41,7 @@ void runTestCase(TestCase testCase, char testNumber){
 	
 	printf("%-6d|%-30s|%-10s\n", testNumber, testCase.testName, isTestPass == TEST_FAIL ? failMsg : successMsg); 
     
-	if(isTestPass == TEST_FAIL) printf("Error №%d: %s%s%s.\n", ++errorCount, KMAG, errorMsg, KNRM);
+	if(isTestPass == TEST_FAIL) printf("Error #%d in %s(%s:%d): %s%s%s.\n", ++errorCount, failFuncName, fileName, lineNumber, KMAG, errorMsg, KNRM);
 }
 
 void testSuit(char* testSuitName, int testCount, ...){
