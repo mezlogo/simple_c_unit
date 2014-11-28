@@ -1,5 +1,7 @@
 Simple unit test framework for C.
 
+https://travis-ci.org/mezlogo/simple_c_unit.svg?branch=master
+
 For linux os, cos' use color terminal codes.
 
 0) Why:
@@ -30,8 +32,7 @@ Assertion is macros, which signature is:
 assertTrue(errorMessage, test)
 
 Example:
-Inside someFuncTest.c
-#include "SimpleCUnit.h"
+Inside someFuncTest.c (include "SimpleCUnit.h")
 
 void shouldntPass(){
 	assertTrue("Assert should pass", 1 == 1);
@@ -54,3 +55,7 @@ Num.  |Test case name                |Status
 1     |Fail test case                |FAIL 
 Error #1 in shouldntPass(src/test/SimpleCUnitTest.c:5): Assert should fail.
 End of My first test suit. Contain 1 errors.
+
+
+Mezencev Denis
+jaz20age@yahoo.com
