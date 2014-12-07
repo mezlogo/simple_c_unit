@@ -16,7 +16,9 @@
 
 #define assertTrue(message, test) assertationType = ASSERT_TYPE_TRUE; isTestPass = TEST_NOT_FAIL; if (!(test)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; return;} 
 
-#define assertLongEquals(message, expected, actual) assertationType = ASSERT_TYPE_EQUALS; isTestPass = TEST_NOT_FAIL; if ((actual) != (expected)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; expectedValue = expected; actualValue = actual; return;} 
+#define assertLongEquals(message, expected, actual) assertationType = ASSERT_TYPE_LONG_EQUALS; isTestPass = TEST_NOT_FAIL; if ((actual) != (expected)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; expectedValue = expected; actualValue = actual; return;} 
+
+#define assertPointerEquals(message, expected, actual) assertationType = ASSERT_TYPE_POINTER_EQUALS; isTestPass = TEST_NOT_FAIL; if ((actual) != (expected)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; expectedPointer = expected; actualPointer = actual; return;} 
 
 
 char* successMsg = "PASS";
@@ -31,10 +33,13 @@ char isTestPass = TEST_NOT_FAIL;
 
 
 #define ASSERT_TYPE_TRUE 1
-#define ASSERT_TYPE_EQUALS 2
+#define ASSERT_TYPE_LONG_EQUALS 2
+#define ASSERT_TYPE_POINTER_EQUALS 3
 char assertationType;
 long expectedValue;
+char * expectedPointer;
 long actualValue;
+char * actualPointer;
 
 typedef struct TestCase{
 	char* testName;
@@ -56,8 +61,14 @@ void runTestCase(TestCase testCase, char testNumber){
 			case ASSERT_TYPE_TRUE: 
 				printf("Error #%d in %s(%s:%d): %s%s%s.\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KNRM); 
 				break;
+			case ASSERT_TYPE_POINTER_EQUALS:
+				printf("Error #%d in %s(%s:%d): %s%s%s. \n%s%x%s%x%s\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KYEL, "Expected: ", expectedPointer, " Actual: ", actualPointer, KNRM);
+				break;
+			case ASSERT_TYPE_LONG_EQUALS: 
+				printf("Error #%d in %s(%s:%d): %s%s%s. \n%s%lu%s%lu%s\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KYEL, "Expected: ", expectedValue, " Actual: ", actualValue, KNRM); 
+				break;
 			default: 
-				printf("Error #%d in %s(%s:%d): %s%s%s. %s%lu%s%lu%s\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KYEL, "Expected: ", expectedValue, " Actual: ", actualValue, KNRM); 
+				printf("%s", "Assert's type sn't defined!/n");
 		}
 		
 	}
