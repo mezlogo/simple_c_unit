@@ -14,7 +14,10 @@
 #define TEST_FAIL -1
 #define TEST_NOT_FAIL 0
 
-#define assertTrue(message, test) isTestPass = TEST_NOT_FAIL; if (!(test)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; return;} 
+#define assertTrue(message, test) assertationType = ASSERT_TYPE_TRUE; isTestPass = TEST_NOT_FAIL; if (!(test)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; return;} 
+
+#define assertLongEquals(message, expected, actual) assertationType = ASSERT_TYPE_EQUALS; isTestPass = TEST_NOT_FAIL; if ((actual) != (expected)) {fileName = __FILE__; failFuncName = __func__; lineNumber = __LINE__; isTestPass = TEST_FAIL; errorMsg = message; expectedValue = expected; actualValue = actual; return;} 
+
 
 char* successMsg = "PASS";
 char* failMsg = "FAIL";
@@ -25,6 +28,13 @@ char* errorMsg = "No errors";
 char errorCount = 0;
 char lineNumber;
 char isTestPass = TEST_NOT_FAIL;
+
+
+#define ASSERT_TYPE_TRUE 1
+#define ASSERT_TYPE_EQUALS 2
+char assertationType;
+long expectedValue;
+long actualValue;
 
 typedef struct TestCase{
 	char* testName;
@@ -41,7 +51,18 @@ void runTestCase(TestCase testCase, char testNumber){
 	
 	printf("%-6d|%-30s|%-10s\n", testNumber, testCase.testName, isTestPass == TEST_FAIL ? failMsg : successMsg); 
     
-	if(isTestPass == TEST_FAIL) printf("Error #%d in %s(%s:%d): %s%s%s.\n", ++errorCount, failFuncName, fileName, lineNumber, KMAG, errorMsg, KNRM);
+	if(isTestPass == TEST_FAIL) { 
+		switch (assertationType) {
+			case ASSERT_TYPE_TRUE: 
+				printf("Error #%d in %s(%s:%d): %s%s%s.\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KNRM); 
+				break;
+			default: 
+				printf("Error #%d in %s(%s:%d): %s%s%s. %s%d%s%d%s\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KYEL, "Expected: ", expectedValue, " Actual: ", actualValue, KNRM); 
+		}
+		
+	}
+	// Fix: if test case had no assertation AND prev test case was failed, then current test case, seems like failed test case.
+	isTestPass = TEST_NOT_FAIL;
 }
 
 void testSuit(char* testSuitName, int testCount, ...){
