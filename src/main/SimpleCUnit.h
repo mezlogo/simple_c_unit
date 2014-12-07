@@ -57,7 +57,7 @@ void runTestCase(TestCase testCase, char testNumber){
 				printf("Error #%d in %s(%s:%d): %s%s%s.\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KNRM); 
 				break;
 			default: 
-				printf("Error #%d in %s(%s:%d): %s%s%s. %s%d%s%d%s\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KYEL, "Expected: ", expectedValue, " Actual: ", actualValue, KNRM); 
+				printf("Error #%d in %s(%s:%d): %s%s%s. %s%lu%s%lu%s\n", ++errorCount, failFuncName, fileName, lineNumber, KRED, errorMsg, KYEL, "Expected: ", expectedValue, " Actual: ", actualValue, KNRM); 
 		}
 		
 	}
